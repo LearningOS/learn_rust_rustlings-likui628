@@ -20,10 +20,11 @@ fn main() {
     thread::spawn(move || {
         for _ in 0..10 {
             thread::sleep(Duration::from_millis(250));
-            status_shared.jobs_completed += 1;
+            let mut value = status_shared.lock().unwrap();
+            value.jobs_completed += 1;
         }
     });
-    while status.jobs_completed < 10 {
+    while (status.lock().unwrap()).jobs_completed < 10 {
         println!("waiting... ");
         thread::sleep(Duration::from_millis(500));
     }
